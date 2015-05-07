@@ -16,12 +16,9 @@ void setup() {
   frameRate(30);
   colorMode(HSB);
   rectMode(CENTER);
- 
   pts = new ArrayList<Particle>();
- 
   showInstruction = true;
   instructionsFont = createFont("Helvetica", 18, true);
- 
   background(255);
 }
 
@@ -32,7 +29,6 @@ void draw() {
     fill(128);
     textAlign(CENTER, CENTER);
     textFont(instructionsFont);
-    textLeading(36);
     text("drag and draw" + "\n" +
       "Press 'c' to clear the canvas." + "\n"
       , width/2, height/2);
@@ -93,20 +89,19 @@ class Particle{
   color c;
    
   Particle(float x, float y, float xOffset, float yOffset){
+    loc = new PVector(x,y); 
+    
     //** Adjust these variables **
     lifeSpan = int(random(30, 90)); //how much time the particle lives
     weightRange = random(3, 50); //how big can each circle be
     color cmix = color(250, 250, 250); //color definition
     c = generateRandomColor(cmix); //generates pseudo-random colors within a same palette based on the value of cmix
     
-    loc = new PVector(x,y);     
     float randomDegrees = random(360);
     vel = new PVector(cos(radians(randomDegrees)), sin(radians(randomDegrees))); 
     vel.mult(random(5));
-    
     acc = new PVector(0,0);
     decay = random(0.75, 0.9);    
- 
     this.xOffset = xOffset;
     this.yOffset = yOffset;
   }
@@ -127,7 +122,6 @@ class Particle{
     PVector direction = new PVector(cos(rn),sin(rn));
     acc.mult(magnitude);
     acc.add(direction);
-
     float randomDegrees = random(360);
     PVector randomVector = new PVector(cos(radians(randomDegrees)), sin(radians(randomDegrees)));
     randomVector.mult(0.5);
@@ -146,13 +140,16 @@ class Particle{
   }
 }
  
-// returns a random color 
+/* function that returns a random color:
+    we average RGB values of random colors with those of a constant color (mix) in order to generate
+    an aesthetically pleasent color palette
+ */
 color generateRandomColor(color mix) {
     int red = int(random(100,250));
     int green = int(random(100,250));
     int blue = int(random(100,250));
 
-    // mixing the color
+    // mixing the color (averaging)
     red = int((red + red(mix)) / 2);
     green = int((green + green(mix)) / 2);
     blue = int((blue + blue(mix)) / 2);
